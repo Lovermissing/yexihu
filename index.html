@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>West Lake of USTC</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cambria&display=swap');
+        
+        body {
+            font-family: 'Cambria', serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.8);
+            background-image: url('images/yexihu.jpeg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-blend-mode: lighten;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #2c5e1a;
+            text-shadow: 2px 2px 4px white, -2px -2px 4px white, 
+                         2px -2px 4px white, -2px 2px 4px white;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+            z-index: 0;
+            animation: float 10s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-50px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        .icon-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .icon {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+            z-index: 3;
+        }
+
+        .icon:hover {
+            transform: scale(1.5);
+            z-index: 4;
+        }
+
+        .icon::after {
+            content: attr(data-title);
+            position: absolute;
+            width: 200px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #333;
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .icon:hover::after {
+            opacity: 1;
+        }
+
+        .icon-1 { top: 20%; left: 10%; }
+        .icon-2 { top: 30%; right: 15%; }
+        .icon-3 { bottom: 25%; left: 12%; }
+        .icon-4 { bottom: 35%; right: 10%; }
+        .icon-5 { top: 15%; right: 20%; }
+        .icon-6 { bottom: 20%; left: 20%; }
+
+        .content {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .content h2 {
+            color: #2c5e1a;
+            border-bottom: 2px solid #8BC34A;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>West Lake of USTC</h1>
+        </header>
+
+        <div class="content">
+            <div id="intro">
+                <h2>About West Lake</h2>
+                <p>West Lake is located in the heart of the West Campus of the University of Science and Technology of China (USTC). Originally a weed-covered depression, it was transformed in the 1980s during the construction of the West Campus when teachers and students rolled up their sleeves and worked together to dredge and renovate the wild pond, turning it into a major landscape feature of the campus.</p>
+                
+                <p>The lake is lined with metasequoia trees and features a small island in the center, connected to the south bank by a wooden bridge. On the island stands the Yijian Pavilion (also known as the "One Heart Pavilion"). At the northeast corner of the lake lies the Fanghua Garden.</p>
+                
+                <p>In spring, visitors can enjoy fishing by the lake, while in winter, flocks of wild ducks come to overwinter, and black swans often swim in its waters. It's a popular spot for both campus members and visitors to stroll and relax.</p>
+            </div>
+
+            <div id="attractions" class="hidden">
+                <h2>Nearby Attractions</h2>
+                <h3>Campus Facilities</h3>
+                <p><strong>West Campus Library:</strong> Built by the lake, the first floor has a café where you can enjoy coffee while admiring the lake view.</p>
+                <p><strong>"I Love USTC" Photo Spot:</strong> Located along the lakeside greenway, this is a popular background for alumni and visitors to take commemorative photos.</p>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2023 USTC West Lake | All Rights Reserved
+        </footer>
+    </div>
+
+    <div class="icon-container">
+        <div class="icon icon-1" data-title="West Lake History">🌳</div>
+        <div class="icon icon-2" data-title="Metasequoia Trees">🌲</div>
+        <div class="icon icon-3" data-title="Yijian Pavilion">🏯</div>
+        <div class="icon icon-4" data-title="Fanghua Garden">🏡</div>
+        <div class="icon icon-5" data-title="West Campus Library">📚</div>
+        <div class="icon icon-6" data-title="Photo Spot">📸</div>
+    </div>
+
+    <script>
+        // Create floating leaves
+        function createLeaves() {
+            const colors = ['#4CAF50', '#8BC34A', '#2E7D32', '#689F38'];
+            for (let i = 0; i < 20; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.style.left = Math.random() * 100 + 'vw';
+                leaf.style.top = Math.random() * 100 + 'vh';
+                leaf.style.opacity = Math.random() * 0.5 + 0.3;
+                leaf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                leaf.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                leaf.style.animationDelay = (Math.random() * 5) + 's';
+                
+                // Create leaf shape using clip-path
+                leaf.style.background = colors[Math.floor(Math.random() * colors.length)];
+                leaf.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)';
+                
+                document.body.appendChild(leaf);
+            }
+        }
+
+        window.onload = function() {
+            createLeaves();
+            
+            // Show attractions section when any icon is clicked
+            const icons = document.querySelectorAll('.icon');
+            const introSection = document.getElementById('intro');
+            const attractionsSection = document.getElementById('attractions');
+            
+            icons.forEach(icon => {
+                icon.addEventListener('click', () => {
+                    introSection.classList.add('hidden');
+                    attractionsSection.classList.remove('hidden');
+                });
+            });
+        };
+    </script>
+</body>
+</html>
