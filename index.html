@@ -195,12 +195,12 @@
             align-items: center;
             position: absolute;
             left: 0;
-            animation: scroll 15s linear infinite; /* 调整为15秒完成一轮 */
+            animation: scroll 30s linear infinite;
         }
 
         @keyframes scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            100% { transform: translateX(calc(-100% * 9)); }
         }
 
         .film-frame {
@@ -459,10 +459,10 @@
         function showScenery() {
             closeCenterContent();
             filmGallery.style.display = 'block';
-            // 重置动画
+            // 重置动画确保从第一张开始
             filmStrip.style.animation = 'none';
             void filmStrip.offsetWidth; // 触发重绘
-            filmStrip.style.animation = 'scroll 15s linear infinite'; // 调整为15秒完成一轮
+            filmStrip.style.animation = 'scroll 30s linear infinite';
         }
 
         function zoomImage(img) {
@@ -499,7 +499,7 @@
             if (filmGallery.style.display === 'block') {
                 filmStrip.style.animation = 'none';
                 void filmStrip.offsetWidth;
-                filmStrip.style.animation = 'scroll 15s linear infinite';
+                filmStrip.style.animation = 'scroll 30s linear infinite';
             }
         });
 
