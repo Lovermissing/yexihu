@@ -173,33 +173,20 @@
             font-size: 1.5rem;
         }
 
-        /* 居中胶片画廊样式 */
+        /* 胶片画廊样式 */
         .film-gallery-container {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
-            height: 60vh;
+            width: 85%;
+            height: 65vh;
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 100;
             display: none;
             overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-            /* 边缘虚化效果 */
-            mask-image: radial-gradient(
-                circle at center,
-                rgba(0,0,0,1) 60%,
-                rgba(0,0,0,0.5) 80%,
-                rgba(0,0,0,0) 100%
-            );
-            -webkit-mask-image: radial-gradient(
-                circle at center,
-                rgba(0,0,0,1) 60%,
-                rgba(0,0,0,0.5) 80%,
-                rgba(0,0,0,0) 100%
-            );
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
         }
 
         .film-strip {
@@ -208,7 +195,12 @@
             align-items: center;
             position: absolute;
             left: 0;
-            transition: transform 1s ease;
+            animation: scroll 15s linear infinite; /* 调整为15秒完成一轮 */
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
 
         .film-frame {
@@ -219,37 +211,49 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            margin: 0 5px;
+        }
+
+        .film-frame::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background-color: white;
         }
 
         .film-frame img {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 95%;
+            max-height: 95%;
             object-fit: contain;
-            filter: grayscale(100%) contrast(120%);
             cursor: pointer;
             transition: transform 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .film-frame img:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
-        /* 退出按钮样式 */
-        .exit-gallery {
+        /* 关闭按钮样式 */
+        .close-gallery-btn {
             position: absolute;
             top: 15px;
             right: 15px;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
             width: 40px;
             height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 50%;
-            z-index: 102;
+            z-index: 101;
+            border: 1px solid white;
         }
 
         /* 放大图片样式 */
@@ -346,10 +350,38 @@
         <p>Floors 5-11 of the main building are areas such as reference book reading rooms, Chinese and foreign periodical rooms, and Chinese book weeding storage. The 12th floor of the main building is the Western Book Collection. The annex building floors 1-4 collect a total of 180,000 types and more than 400,000 volumes of social science and natural science books.</p>
     </div>
 
-    <!-- 居中胶片画廊 -->
+    <!-- 胶片画廊 -->
     <div class="film-gallery-container" id="film-gallery">
-        <div class="exit-gallery" onclick="closeFilmGallery()">×</div>
+        <div class="close-gallery-btn" onclick="closeFilmGallery()">×</div>
         <div class="film-strip" id="film-strip">
+            <div class="film-frame">
+                <img src="images/1.jpg" alt="Scenery 1" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/2.jpeg" alt="Scenery 2" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/3.jpeg" alt="Scenery 3" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/4.jpeg" alt="Scenery 4" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree.jpg" alt="Tree" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree1.jpg" alt="Tree 1" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree2.jpg" alt="Tree 2" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree3.jpg" alt="Tree 3" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree4.jpg" alt="Tree 4" onclick="zoomImage(this)">
+            </div>
+            <!-- 复制一份实现无缝循环 -->
             <div class="film-frame">
                 <img src="images/1.jpg" alt="Scenery 1" onclick="zoomImage(this)">
             </div>
@@ -409,40 +441,10 @@
             }
         }
 
-        // 胶片画廊自动滑动
+        // 胶片画廊控制
         let filmStrip = document.getElementById('film-strip');
         let filmGallery = document.getElementById('film-gallery');
-        let currentPosition = 0;
-        let slideInterval;
         let isPlaying = true;
-        const frameWidth = window.innerWidth;
-        let totalFrames = document.querySelectorAll('.film-frame').length;
-        let currentFrame = 0;
-
-        function startSlideshow() {
-            slideInterval = setInterval(() => {
-                if (isPlaying) {
-                    currentFrame = (currentFrame + 1) % totalFrames;
-                    currentPosition = -currentFrame * frameWidth;
-                    
-                    // 无缝循环处理
-                    if (currentFrame === totalFrames - 1) {
-                        // 当到达最后一张时，立即重置位置
-                        setTimeout(() => {
-                            currentFrame = 0;
-                            currentPosition = 0;
-                            filmStrip.style.transition = 'none';
-                            filmStrip.style.transform = `translateX(0)`;
-                            // 强制重绘
-                            void filmStrip.offsetWidth;
-                            filmStrip.style.transition = 'transform 1s ease';
-                        }, 1000); // 与transition时间一致
-                    }
-                    
-                    filmStrip.style.transform = `translateX(${currentPosition}px)`;
-                }
-            }, 3000); // 每3秒滑动一次
-        }
 
         function showHistory() {
             closeCenterContent();
@@ -457,29 +459,26 @@
         function showScenery() {
             closeCenterContent();
             filmGallery.style.display = 'block';
-            currentPosition = 0;
-            currentFrame = 0;
-            filmStrip.style.transform = 'translateX(0)';
-            isPlaying = true;
-            startSlideshow();
+            // 重置动画
+            filmStrip.style.animation = 'none';
+            void filmStrip.offsetWidth; // 触发重绘
+            filmStrip.style.animation = 'scroll 15s linear infinite'; // 调整为15秒完成一轮
         }
 
         function zoomImage(img) {
-            clearInterval(slideInterval);
-            isPlaying = false;
+            filmStrip.style.animationPlayState = 'paused';
             document.getElementById('zoomed-img').src = img.src;
             document.getElementById('zoomed-image').style.display = 'flex';
         }
 
         function closeZoom() {
             document.getElementById('zoomed-image').style.display = 'none';
-            isPlaying = true;
-            startSlideshow();
+            filmStrip.style.animationPlayState = 'running';
         }
 
         function closeFilmGallery() {
             filmGallery.style.display = 'none';
-            clearInterval(slideInterval);
+            filmStrip.style.animation = 'none';
         }
 
         function closeCenterContent() {
@@ -497,9 +496,11 @@
 
         // 窗口大小改变时重置
         window.addEventListener('resize', () => {
-            frameWidth = window.innerWidth;
-            currentPosition = -currentFrame * frameWidth;
-            filmStrip.style.transform = `translateX(${currentPosition}px)`;
+            if (filmGallery.style.display === 'block') {
+                filmStrip.style.animation = 'none';
+                void filmStrip.offsetWidth;
+                filmStrip.style.animation = 'scroll 15s linear infinite';
+            }
         });
 
         window.onload = function() {
@@ -507,6 +508,4 @@
         };
     </script>
 </body>
-
 </html>
-
