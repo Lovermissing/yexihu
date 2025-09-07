@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yexi Lake of USTC</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cambria&display=swap');
+        
+        body {
+            font-family: 'Cambria', serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-image: url('images/yexihu.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #2c5e1a;
+            text-shadow: 2px 2px 4px white, -2px -2px 4px white, 
+                         2px -2px 4px white, -2px 2px 4px white;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+            z-index: 0;
+            animation: float 10s infinite linear;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%234CAF50" d="M50,0 Q70,30 50,60 Q30,30 50,0"/></svg>');
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-50px) rotate(180deg);
+            }
+            100% {
+                transform: translateY(0) rotate(360deg);
+            }
+        }
+
+        .icon-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .icon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+            z-index: 3;
+            border: 2px solid white;
+        }
+
+        .icon:hover {
+            transform: scale(1.5);
+            z-index: 4;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .icon::after {
+            content: attr(data-title);
+            position: absolute;
+            width: 220px;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            color: #333;
+            font-size: 1.1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            text-align: center;
+        }
+
+        .icon:hover::after {
+            opacity: 1;
+        }
+
+        .icon-1 { top: 20%; left: 10%; }
+        .icon-2 { top: 30%; right: 15%; }
+        .icon-3 { bottom: 20%; left: 20%; }
+        .back-icon { bottom: 10%; left: 5%; }
+
+        .content {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .content h2 {
+            color: #2c5e1a;
+            border-bottom: 2px solid #8BC34A;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .center-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* 居中胶片画廊样式 */
+        .film-gallery-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 60vh;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            /* 边缘虚化效果 */
+            mask-image: radial-gradient(
+                circle at center,
+                rgba(0,0,0,1) 60%,
+                rgba(0,0,0,0.5) 80%,
+                rgba(0,0,0,0) 100%
+            );
+            -webkit-mask-image: radial-gradient(
+                circle at center,
+                rgba(0,0,0,1) 60%,
+                rgba(0,0,0,0.5) 80%,
+                rgba(0,0,0,0) 100%
+            );
+        }
+
+        .film-strip {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            position: absolute;
+            left: 0;
+            transition: transform 1s ease;
+        }
+
+        .film-frame {
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .film-frame img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            filter: grayscale(100%) contrast(120%);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .film-frame img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 退出按钮样式 */
+        .exit-gallery {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            z-index: 102;
+        }
+
+        /* 放大图片样式 */
+        .zoomed-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 101;
+            display: none;
+        }
+
+        .zoomed-image img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+        }
+
+        .close-zoom {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: white;
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Yexi Lake of USTC</h1>
+        </header>
+
+        <div class="content">
+            <div id="intro">
+                <h2>About Yexi Lake</h2>
+                <p>Yexi Lake is located in the heart of the West Campus of the University of Science and Technology of China (USTC). Originally a weed-covered depression, it was transformed in the 1980s during the construction of the West Campus when teachers and students rolled up their sleeves and worked together to dredge and renovate the wild pond, turning it into a major landscape feature of the campus.</p>
+                
+                <p>The lake is lined with metasequoia trees and features a small island in the center, connected to the south bank by a wooden bridge. On the island stands the Yijian Pavilion (also known as the "One Heart Pavilion"). At the northeast corner of the lake lies the Fanghua Garden.</p>
+                
+                <p>In spring, visitors can enjoy fishing by the lake, while in winter, flocks of wild ducks come to overwinter, and black swans often swim in its waters. It's a popular spot for both campus members and visitors to stroll and relax.</p>
+            </div>
+
+            <div id="attractions" class="hidden">
+                <h2>Nearby Attractions</h2>
+                <h3>Campus Facilities</h3>
+                <p><strong>West Campus Library:</strong> Built by the lake, the first floor has a café where you can enjoy coffee while admiring the lake view.</p>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2023 USTC Yexi Lake | All Rights Reserved
+        </footer>
+    </div>
+
+    <!-- Center display content -->
+    <div id="history-content" class="center-content">
+        <span class="close-btn" onclick="closeCenterContent()">×</span>
+        <h2>About Yexi Lake</h2>
+        <p>Yexi Lake is located in the heart of the West Campus of the University of Science and Technology of China (USTC). Originally a weed-covered depression, it was transformed in the 1980s during the construction of the West Campus when teachers and students rolled up their sleeves and worked together to dredge and renovate the wild pond, turning it into a major landscape feature of the campus.</p>
+        <p>The lake is lined with metasequoia trees and features a small island in the center, connected to the south bank by a wooden bridge. On the island stands the Yijian Pavilion (also known as the "One Heart Pavilion"). At the northeast corner of the lake lies the Fanghua Garden.</p>
+        <p>In spring, visitors can enjoy fishing by the lake, while in winter, flocks of wild ducks come to overwinter, and black swans often swim in its waters. It's a popular spot for both campus members and visitors to stroll and relax.</p>
+    </div>
+
+    <div id="library-content" class="center-content">
+        <span class="close-btn" onclick="closeCenterContent()">×</span>
+        <h2>West Campus Library</h2>
+        <img src="images/xitu.jpeg" alt="West Campus Library" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+        <p>The West Campus Library of the University of Science and Technology of China is the main library of USTC. It was put into use in September 1997 with an area of 18,587 square meters and reopened after space renovation in 2016.</p>
+        <h3>Architectural Structure and Functional Zones</h3>
+        <p>The main building floors 1-4 are the Future Learning Center, providing more than 20 different learning spaces including study rooms, Chinese newspaper reading rooms, book漂流 spaces, shared learning spaces, reservation seminar rooms, innovation and entrepreneurship studios, interview rooms, online course recording studios and academic lecture halls.</p>
+        <p>Floors 5-11 of the main building are areas such as reference book reading rooms, Chinese and foreign periodical rooms, and Chinese book weeding storage. The 12th floor of the main building is the Western Book Collection. The annex building floors 1-4 collect a total of 180,000 types and more than 400,000 volumes of social science and natural science books.</p>
+    </div>
+
+    <!-- 居中胶片画廊 -->
+    <div class="film-gallery-container" id="film-gallery">
+        <div class="exit-gallery" onclick="closeFilmGallery()">×</div>
+        <div class="film-strip" id="film-strip">
+            <div class="film-frame">
+                <img src="images/1.jpg" alt="Scenery 1" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/2.jpeg" alt="Scenery 2" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/3.jpeg" alt="Scenery 3" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/4.jpeg" alt="Scenery 4" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree.jpg" alt="Tree" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree1.jpg" alt="Tree 1" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree2.jpg" alt="Tree 2" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree3.jpg" alt="Tree 3" onclick="zoomImage(this)">
+            </div>
+            <div class="film-frame">
+                <img src="images/tree4.jpg" alt="Tree 4" onclick="zoomImage(this)">
+            </div>
+        </div>
+    </div>
+
+    <!-- 放大图片容器 -->
+    <div class="zoomed-image" id="zoomed-image">
+        <span class="close-zoom" onclick="closeZoom()">×</span>
+        <img id="zoomed-img" src="" alt="Zoomed Image">
+    </div>
+
+    <div class="icon-container">
+        <div class="icon icon-1" data-title="Yexi Lake History" onclick="showHistory()">📜</div>
+        <div class="icon icon-2" data-title="Scenery" onclick="showScenery()">🌄</div>
+        <div class="icon icon-3" data-title="Library" onclick="showLibrary()">📚</div>
+        <div class="icon back-icon" data-title="Back to Home" onclick="goBack()">←</div>
+    </div>
+
+    <script>
+        // Create floating leaves
+        function createLeaves() {
+            for (let i = 0; i < 20; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.style.left = Math.random() * 100 + 'vw';
+                leaf.style.top = Math.random() * 100 + 'vh';
+                leaf.style.opacity = Math.random() * 0.5 + 0.3;
+                leaf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                leaf.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                leaf.style.animationDelay = (Math.random() * 5) + 's';
+                document.body.appendChild(leaf);
+            }
+        }
+
+        // 胶片画廊自动滑动
+        let filmStrip = document.getElementById('film-strip');
+        let filmGallery = document.getElementById('film-gallery');
+        let currentPosition = 0;
+        let slideInterval;
+        let isPlaying = true;
+        const frameWidth = window.innerWidth;
+        let totalFrames = document.querySelectorAll('.film-frame').length;
+        let currentFrame = 0;
+
+        function startSlideshow() {
+            slideInterval = setInterval(() => {
+                if (isPlaying) {
+                    currentFrame = (currentFrame + 1) % totalFrames;
+                    currentPosition = -currentFrame * frameWidth;
+                    
+                    // 无缝循环处理
+                    if (currentFrame === totalFrames - 1) {
+                        // 当到达最后一张时，立即重置位置
+                        setTimeout(() => {
+                            currentFrame = 0;
+                            currentPosition = 0;
+                            filmStrip.style.transition = 'none';
+                            filmStrip.style.transform = `translateX(0)`;
+                            // 强制重绘
+                            void filmStrip.offsetWidth;
+                            filmStrip.style.transition = 'transform 1s ease';
+                        }, 1000); // 与transition时间一致
+                    }
+                    
+                    filmStrip.style.transform = `translateX(${currentPosition}px)`;
+                }
+            }, 3000); // 每3秒滑动一次
+        }
+
+        function showHistory() {
+            closeCenterContent();
+            document.getElementById('history-content').style.display = 'block';
+        }
+
+        function showLibrary() {
+            closeCenterContent();
+            document.getElementById('library-content').style.display = 'block';
+        }
+
+        function showScenery() {
+            closeCenterContent();
+            filmGallery.style.display = 'block';
+            currentPosition = 0;
+            currentFrame = 0;
+            filmStrip.style.transform = 'translateX(0)';
+            isPlaying = true;
+            startSlideshow();
+        }
+
+        function zoomImage(img) {
+            clearInterval(slideInterval);
+            isPlaying = false;
+            document.getElementById('zoomed-img').src = img.src;
+            document.getElementById('zoomed-image').style.display = 'flex';
+        }
+
+        function closeZoom() {
+            document.getElementById('zoomed-image').style.display = 'none';
+            isPlaying = true;
+            startSlideshow();
+        }
+
+        function closeFilmGallery() {
+            filmGallery.style.display = 'none';
+            clearInterval(slideInterval);
+        }
+
+        function closeCenterContent() {
+            const contents = document.querySelectorAll('.center-content');
+            contents.forEach(content => {
+                content.style.display = 'none';
+            });
+            closeFilmGallery();
+            document.getElementById('zoomed-image').style.display = 'none';
+        }
+
+        function goBack() {
+            window.location.href = 'https://lovermissing.github.io/West/';
+        }
+
+        // 窗口大小改变时重置
+        window.addEventListener('resize', () => {
+            frameWidth = window.innerWidth;
+            currentPosition = -currentFrame * frameWidth;
+            filmStrip.style.transform = `translateX(${currentPosition}px)`;
+        });
+
+        window.onload = function() {
+            createLeaves();
+        };
+    </script>
+</body>
+</html>
